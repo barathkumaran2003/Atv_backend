@@ -5,20 +5,16 @@ const Shop = require("../models/Shop");
 const User = require("../models/User");
 
 const signin = async (req, res) => {
-  const { username, password, email, phonenumber } = req.body;
+  const { username, password, email, phonenumber, userType } = req.body;
 
   try {
     // Optional: check for existing user
     const existingUser = await User.findOne({ email });
     const existingUsername = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" }); // ✅ must return JSON
+      return res.json({ message: `User signed in successfully`, usert:`${userType}` }); // ✅ must return JSON
     }
-    else if (existingUsername) {
-      return res.status(400).json({ message: "Username already exists" }); // ✅ must return JSON
-    }
-
-    const user = new User({ username, password, email, phonenumber });
+    const user = new User({ username, password, email, phonenumber, userType });
     await user.save();
 
     return res.status(201).json({ message: "User signed in successfully" }); // ✅ must return JSON
